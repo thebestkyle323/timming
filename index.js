@@ -8,7 +8,8 @@ import telegraf from 'telegraf';
 const { Telegraf } = telegraf;
 
 const TOKEN = process.env.TOKEN;
-const CHANNEL_ID = process.env.CHANNEL_ID;
+const CHANNEL_ID_1 = process.env.CHANNEL_ID_1; // 第一个 Telegram 频道 ID
+const CHANNEL_ID_2 = process.env.CHANNEL_ID_2; // 第二个 Telegram 频道 ID
 const TRENDING_URL =
   'https://m.weibo.cn/api/container/getIndex?containerid=106003type%3D25%26t%3D3%26disable_hot%3D1%26filter_type%3Drealtimehot';
 const TRENDING_DETAIL_URL = 'https://m.s.weibo.com/topic/detail?q=%s';
@@ -49,7 +50,15 @@ async function sendTgMessage(data) {
       'YYYY-MM-DD HH:mm:ss',
     )} ([查看更多]())\n`,
   );
-  await bot.telegram.sendMessage(CHANNEL_ID, text.join('\n'), {
+  
+  // 发送消息到第一个频道
+  await bot.telegram.sendMessage(CHANNEL_ID_1, text.join('\n'), {
+    parse_mode: 'Markdown',
+    disable_web_page_preview: true,
+  });
+
+  // 发送消息到第二个频道
+  await bot.telegram.sendMessage(CHANNEL_ID_2, text.join('\n'), {
     parse_mode: 'Markdown',
     disable_web_page_preview: true,
   });
