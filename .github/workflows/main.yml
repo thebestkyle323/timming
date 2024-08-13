@@ -1,34 +1,35 @@
-name: Node.js CI
+name: schedule
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-
+  schedule:
+    - cron: "0 19 * * *"
+  
   workflow_dispatch:
 
 jobs:
-  build:
+  send_to_channels:
     runs-on: ubuntu-latest
 
+    env:
+      TOKEN: ${{ secrets.TOKEN }}
+      CHANNEL_ID_1: ${{ secrets.CHANNEL_ID_1 }}
+      CHANNEL_ID_2: ${{ secrets.CHANNEL_ID_2 }}
+
     steps:
-    - uses: actions/checkout@v2
+      - name: Checkout Git Source
+        uses: actions/checkout@v2
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '14'
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
 
-    - name: Install dependencies
-      run: npm install
+      - name: Install Dependencies
+        run: yarn install
 
-    - name: Run Node.js script
-      run: node index.js
-      env:
-        TOKEN: ${{ secrets.TOKEN }}
-        CHANNEL_ID_1: ${{ secrets.CHANNEL_ID_1 }}
-        CHANNEL_ID_2: ${{ secrets.CHANNEL_ID_2 }}
-        CHANNEL_ID_3: ${{ secrets.CHANNEL_ID_3 }}
+      - name: Run Command
+        run: yarn start
+        env:
+          TOKEN: ${{ secrets.TOKEN }}
+          CHANNEL_ID_1: ${{ secrets.CHANNEL_ID_1 }}
+          CHANNEL_ID_2: ${{ secrets.CHANNEL_ID_2 }}
