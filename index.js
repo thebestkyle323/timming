@@ -14,9 +14,6 @@ const TRENDING_URL =
   'https://m.weibo.cn/api/container/getIndex?containerid=106003type%3D25%26t%3D3%26disable_hot%3D1%26filter_type%3Drealtimehot';
 const TRENDING_DETAIL_URL = 'https://m.s.weibo.com/topic/detail?q=%s';
 
-// 提供一个固定的图片链接
-const IMAGE_URL = 'https://app.iwanshare.club/uploads/20240814/cf643ec476d0a9afff266f7a18695bea.jpg'; // 替换成实际的图片链接
-
 const bot = new Telegraf(TOKEN);
 
 let RETRY_TIME = 5;
@@ -53,17 +50,17 @@ async function sendTgMessage(data) {
       'YYYY-MM-DD HH:mm:ss',
     )} ([查看更多]())\n`,
   );
-
-  // 将图片和文本一起发送到第一个频道
-  await bot.telegram.sendPhoto(CHANNEL_ID_1, IMAGE_URL, {
-    caption: text.join('\n'),
+  
+  // 发送消息到第一个频道
+  await bot.telegram.sendMessage(CHANNEL_ID_1, text.join('\n'), {
     parse_mode: 'Markdown',
+    disable_web_page_preview: true,
   });
 
-  // 将图片和文本一起发送到第二个频道
-  await bot.telegram.sendPhoto(CHANNEL_ID_2, IMAGE_URL, {
-    caption: text.join('\n'),
+  // 发送消息到第二个频道
+  await bot.telegram.sendMessage(CHANNEL_ID_2, text.join('\n'), {
     parse_mode: 'Markdown',
+    disable_web_page_preview: true,
   });
 }
 
