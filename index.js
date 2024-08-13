@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
+import { load } from 'cheerio';
 import Telegraf from 'telegraf';
 import fetch from 'node-fetch';
-import cheerio from 'cheerio';
 
 const bot = new Telegraf(process.env.TOKEN);
 
@@ -22,7 +22,7 @@ async function fetchAppleNewsRss() {
   try {
     const res = await fetch('https://developer.apple.com/news/releases/rss/releases.rss');
     const xmlText = await res.text();
-    const $ = cheerio.load(xmlText, { xmlMode: true });
+    const $ = load(xmlText, { xmlMode: true });
 
     const lastBuildDateString = $('channel > lastBuildDate').text();
     const lastBuildDate = dayjs(lastBuildDateString, 'ddd, DD MMM YYYY HH:mm:ss ZZ');
