@@ -5,6 +5,8 @@ on:
     - cron: '0 12 * * *' # 每天中午12点执行，可根据需要调整时间
   workflow_dispatch:
 
+
+
 jobs:
   fetch_and_send:
     runs-on: ubuntu-latest
@@ -27,6 +29,5 @@ jobs:
           CHANNEL_ID_2: ${{ secrets.TELEGRAM_CHANNEL_ID_2 }}
           CHANNEL_ID_3: ${{ secrets.TELEGRAM_CHANNEL_ID_3 }}
         run: |
-          chmod +x index.js  # 添加执行权限
-          ./index.js         # 执行 index.js 文件
+          node index.js  # 使用 node 命令执行 JavaScript 文件
 
