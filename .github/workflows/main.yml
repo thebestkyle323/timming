@@ -26,4 +26,4 @@ jobs:
           CHANNEL_ID_1: ${{ secrets.TELEGRAM_CHANNEL_ID_1 }}
           CHANNEL_ID_2: ${{ secrets.TELEGRAM_CHANNEL_ID_2 }}
           CHANNEL_ID_3: ${{ secrets.TELEGRAM_CHANNEL_ID_3 }}
-        run: node path/to/your/script.js
+        run: index.js
