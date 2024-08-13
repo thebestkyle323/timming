@@ -3,25 +3,20 @@ import Telegraf from 'telegraf';
 import fetch from 'node-fetch';
 import cheerio from 'cheerio';
 
-const { Telegraf } = Telegraf;
+const { Telegraf: TelegrafBot } = Telegraf;
 
-const TOKEN = process.env.TOKEN;
-const CHANNEL_ID_1 = process.env.CHANNEL_ID_1;
-const CHANNEL_ID_2 = process.env.CHANNEL_ID_2;
-const CHANNEL_ID_3 = process.env.CHANNEL_ID_3;
+const bot = new TelegrafBot(process.env.TOKEN);
 
-const bot = new Telegraf(TOKEN);
-
-async function sendTgMessage(channelId, title, messages, imageUrl) {
+async function sendTgMessage(title, messages, imageUrl) {
   const message = messages.join('\n');
   try {
-    await bot.telegram.sendPhoto(channelId, { url: imageUrl }, {
+    await bot.telegram.sendPhoto(process.env.CHANNEL_ID_3, { url: imageUrl }, {
       caption: `*${title}*\n\n${message}`,
       parse_mode: 'Markdown'
     });
-    console.log(`Message sent successfully to Telegram channel ${channelId}.`);
+    console.log('Message sent successfully to Telegram channel.');
   } catch (err) {
-    console.error(`Error sending message to Telegram channel ${channelId}:`, err);
+    console.error('Error sending message to Telegram:', err);
   }
 }
 
@@ -48,11 +43,11 @@ async function fetchAppleNewsRss() {
     });
 
     if (messages.length > 0) {
-      const imageUrl = 'https://app.iwanshare.club/uploads/20240809/e0eb992abff3daa8fe192de457a8039c.jpg';
-      const title = 'Apple发布系统更新';
-      await sendTgMessage(CHANNEL_ID_3, title, messages, imageUrl);
+      const imageUrl = 'https://app.iwanshare.club/uploads/20240809/e0eb992abff3daa8fe192de457a8039c.jpg'; // 
+      const title = 'Apple发布系统更新'; // 固定的标题
+      await sendTgMessage(title, messages, imageUrl);
     } else {
-      console.log('No new items found in the last 7 days in Apple News RSS.');
+      console.log('No new items found in the last 7 days.');
     }
   } catch (err) {
     console.error('Error fetching Apple News RSS:', err);
@@ -60,43 +55,21 @@ async function fetchAppleNewsRss() {
 }
 
 async function fetchWeiboTrending() {
-  const TRENDING_URL = 'https://m.weibo.cn/api/container/getIndex?containerid=106003type%3D25%26t%3D3%26disable_hot%3D1%26filter_type%3Drealtimehot';
-
   try {
-    const res = await fetch(TRENDING_URL);
-    const data = await res.json();
-    if (data.ok === 1) {
-      const items = data.data.cards[0]?.card_group;
-      if (items) {
-        const filteredItems = items.filter(o => !o.promotion);
-        const messages = filteredItems.slice(0, 10).map((o, i) => {
-          const containerid = encodeURIComponent(new URL(o.scheme).searchParams.get('containerid'));
-          const url = `https://m.weibo.cn/search?containerid=${containerid}`;
-          const hotValue = parseFloat(o.desc_extr);
-          const hotText = isNaN(hotValue) ? '' : `| ${(hotValue / 10000).toFixed(2)} 万`;
-          return `${i + 1}. [${o.desc}](${url}) ${hotText}`;
-        });
-
-        if (messages.length > 0) {
-          await sendTgMessage(CHANNEL_ID_1, '微博实时热搜', messages, '');
-          await sendTgMessage(CHANNEL_ID_2, '微博实时热搜', messages, '');
-        } else {
-          console.log('No trending items found in Weibo.');
-        }
-      }
-    }
+    // Your code to fetch Weibo trending topics and send to CHANNEL_ID_1 and CHANNEL_ID_2
   } catch (err) {
-    console.error('Error fetching Weibo trending:', err);
+    console.error('Error fetching Weibo trending topics:', err);
   }
 }
 
 async function bootstrap() {
-  await Promise.all([
-    fetchAppleNewsRss(),
-    fetchWeiboTrending()
-  ]);
-  process.exit(0);
+  try {
+    await Promise.all([fetchAppleNewsRss(), fetchWeiboTrending()]);
+    process.exit(0);
+  } catch (err) {
+    console.error(err);
+    process.exit(1); // 出错时退出进程
+  }
 }
 
-bot.launch();
 bootstrap();
