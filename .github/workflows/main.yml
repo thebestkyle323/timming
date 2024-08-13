@@ -6,10 +6,10 @@ on:
   workflow_dispatch:
 
 
-
 jobs:
-  fetch_and_send:
+  run-scripts:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -17,17 +17,14 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: '14'  # 使用 Node.js 版本，根据你的需求调整
 
       - name: Install dependencies
-        run: npm install
+        run: npm install  # 安装项目依赖
 
-      - name: Execute index.js
-        env:
-          TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          CHANNEL_ID_1: ${{ secrets.TELEGRAM_CHANNEL_ID_1 }}
-          CHANNEL_ID_2: ${{ secrets.TELEGRAM_CHANNEL_ID_2 }}
-          CHANNEL_ID_3: ${{ secrets.TELEGRAM_CHANNEL_ID_3 }}
-        run: |
-          node index.js  # 使用 node 命令执行 JavaScript 文件
+      - name: Run scripts
+        run: node index.js  # 运行 index.js 文件
+
+      - name: Finish
+        run: echo "Scripts executed successfully"
 
