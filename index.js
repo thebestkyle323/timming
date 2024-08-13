@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import Telegraf from 'telegraf';
+import { Telegraf } from 'telegraf';
 import fetch from 'node-fetch';
 import cheerio from 'cheerio';
 
@@ -7,16 +7,16 @@ const { Telegraf: TelegrafBot } = Telegraf;
 
 const bot = new TelegrafBot(process.env.TOKEN);
 
-async function sendTgMessage(title, messages, imageUrl) {
+async function sendTgMessage(channelId, title, messages, imageUrl) {
   const message = messages.join('\n');
   try {
-    await bot.telegram.sendPhoto(process.env.CHANNEL_ID_3, { url: imageUrl }, {
+    await bot.telegram.sendPhoto(channelId, { url: imageUrl }, {
       caption: `*${title}*\n\n${message}`,
       parse_mode: 'Markdown'
     });
-    console.log('Message sent successfully to Telegram channel.');
+    console.log(`Message sent successfully to Telegram channel ${channelId}.`);
   } catch (err) {
-    console.error('Error sending message to Telegram:', err);
+    console.error(`Error sending message to Telegram channel ${channelId}:`, err);
   }
 }
 
@@ -43,9 +43,9 @@ async function fetchAppleNewsRss() {
     });
 
     if (messages.length > 0) {
-      const imageUrl = 'https://app.iwanshare.club/uploads/20240809/e0eb992abff3daa8fe192de457a8039c.jpg'; // 
-      const title = 'Apple发布系统更新'; // 固定的标题
-      await sendTgMessage(title, messages, imageUrl);
+      const imageUrl = 'https://app.iwanshare.club/uploads/20240809/e0eb992abff3daa8fe192de457a8039c.jpg';
+      const title = 'Apple发布系统更新';
+      await sendTgMessage(process.env.CHANNEL_ID_3, title, messages, imageUrl);
     } else {
       console.log('No new items found in the last 7 days.');
     }
