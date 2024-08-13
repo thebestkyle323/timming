@@ -20,10 +20,13 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run script to fetch and send messages
+      - name: Execute index.js
         env:
           TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           CHANNEL_ID_1: ${{ secrets.TELEGRAM_CHANNEL_ID_1 }}
           CHANNEL_ID_2: ${{ secrets.TELEGRAM_CHANNEL_ID_2 }}
           CHANNEL_ID_3: ${{ secrets.TELEGRAM_CHANNEL_ID_3 }}
-        run: index.js
+        run: |
+          chmod +x index.js  # 添加执行权限
+          ./index.js         # 执行 index.js 文件
+
