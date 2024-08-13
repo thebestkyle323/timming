@@ -6,25 +6,35 @@ on:
   workflow_dispatch:
 
 
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
 jobs:
-  run-scripts:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+    - uses: actions/checkout@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14'  # 使用 Node.js 版本，根据你的需求调整
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
 
-      - name: Install dependencies
-        run: npm install  # 安装项目依赖
+    - name: Install dependencies
+      run: npm install
 
-      - name: Run scripts
-        run: node index.js  # 运行 index.js 文件
-
-      - name: Finish
-        run: echo "Scripts executed successfully"
+    - name: Run Node.js script
+      run: node index.js
+      env:
+        TOKEN: ${{ secrets.TOKEN }}
+        CHANNEL_ID_1: ${{ secrets.CHANNEL_ID_1 }}
+        CHANNEL_ID_2: ${{ secrets.CHANNEL_ID_2 }}
+        CHANNEL_ID_3: ${{ secrets.CHANNEL_ID_3 }}
 
