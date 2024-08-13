@@ -1,8 +1,8 @@
 import fs from 'fs-extra';
 import util from 'util';
 import dayjs from 'dayjs';
-import utc from 'dayjs-plugin-utc';
-import timezone from 'dayjs-plugin-timezone';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 import * as cheerio from 'cheerio';
 import _ from 'lodash';
 import telegraf from 'telegraf';
