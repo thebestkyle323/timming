@@ -1,9 +1,6 @@
 name: schedule
 
-on:
-  schedule:
-    - cron: '0 12 * * *' # 每天中午12点执行，可根据需要调整时间
-  workflow_dispatch:
+
 
 
 
@@ -14,6 +11,8 @@ on:
   pull_request:
     branches:
       - main
+
+   workflow_dispatch:
 
 jobs:
   build:
