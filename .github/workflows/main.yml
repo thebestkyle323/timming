@@ -2,36 +2,28 @@ name: schedule
 
 on:
   schedule:
-    - cron: "0 19 * * *"
-  
+    - cron: '0 12 * * *' # 每天中午12点执行，可根据需要调整时间
   workflow_dispatch:
 
 jobs:
-  send_to_channels:
+  fetch_and_send:
     runs-on: ubuntu-latest
-
-    env:
-      TOKEN: ${{ secrets.TOKEN }}
-      CHANNEL_ID_1: ${{ secrets.CHANNEL_ID_1 }}
-      CHANNEL_ID_2: ${{ secrets.CHANNEL_ID_2 }}
-
     steps:
-      - name: Checkout Git Source
+      - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Use Node.js
-        uses: actions/setup-node@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
-          node-version: "18"
+          node-version: '14'
 
-      - name: Install Dependencies
-        run: yarn install
+      - name: Install dependencies
+        run: npm install
 
-      - name: Run Command
-        run: yarn start
+      - name: Run script to fetch and send messages
         env:
-          TOKEN: ${{ secrets.TOKEN }}
-          CHANNEL_ID_1: ${{ secrets.CHANNEL_ID_1 }}
-          CHANNEL_ID_2: ${{ secrets.CHANNEL_ID_2 }}
-
-     
+          TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          CHANNEL_ID_1: ${{ secrets.TELEGRAM_CHANNEL_ID_1 }}
+          CHANNEL_ID_2: ${{ secrets.TELEGRAM_CHANNEL_ID_2 }}
+          CHANNEL_ID_3: ${{ secrets.TELEGRAM_CHANNEL_ID_3 }}
+        run: node path/to/your/script.js
