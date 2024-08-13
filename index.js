@@ -1,8 +1,6 @@
 import fs from 'fs-extra';
 import util from 'util';
 import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
 import * as cheerio from 'cheerio';
 import _ from 'lodash';
 import telegraf from 'telegraf';
@@ -17,10 +15,6 @@ const TRENDING_URL =
 const TRENDING_DETAIL_URL = 'https://m.s.weibo.com/topic/detail?q=%s';
 
 const bot = new Telegraf(TOKEN);
-
-// 引入并配置 dayjs 插件
-dayjs.extend(utc);
-dayjs.extend(timezone);
 
 let RETRY_TIME = 5;
 
@@ -52,7 +46,7 @@ async function sendTgMessage(data) {
   }).filter(Boolean); // 过滤掉任何 undefined 值
 
   text.unshift(
-    `**微博实时热搜** ${dayjs().tz('Asia/Shanghai').format(
+    `**微博实时热搜** ${dayjs().format(
       'YYYY-MM-DD HH:mm:ss',
     )} ([查看更多]())\n`,
   );
